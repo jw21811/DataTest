@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
-import BST from "./components/BST/index.vue";
+import BST from "./DataStructure/BST/index.vue";
+import RNG from "./SortAlgorithm/RNG.vue";
 </script>
 
 <template>
   <BST/>
+  <RNG/>
 </template>
