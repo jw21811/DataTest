@@ -28,7 +28,7 @@
         >
           <circle
               :r="nodeRadius"
-              :fill="node.color"
+              :fill="node.color === 'black' ? '#c3c3c3': node.color === 'red' ? '#ff6c6c' : node.color"
               stroke="#333"
               stroke-width="2"
           />
@@ -86,6 +86,10 @@ export default {
     tree: {
       type: Object as () => RBT,
       required: true
+    },
+    version: {
+      type: Number,
+      required: true
     }
   },
 
@@ -112,8 +116,7 @@ export default {
   },
 
   watch: {
-    tree: {
-      deep: true,
+    version: {
       immediate: true,
       handler() {
         this.draw()
@@ -304,7 +307,7 @@ svg {
 
 .node-count {
   font-size: 11px;
-  fill: #e74c3c;
+  fill: #fffc00;
   font-weight: bold;
   user-select: none;
 }

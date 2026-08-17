@@ -14,13 +14,14 @@
       </div>
     </aside>
     <main>
-      <RBTDrawer :tree="tree"/>
+      <RBTDrawer :tree="tree" :version="treeVersion"/>
     </main>
   </section>
 </template>
 
 <script lang="ts">
   import RBTDrawer from "./RBTDrawer.vue";
+  import {markRaw} from "vue";
 
   export class RBT{
     size: number;
@@ -92,11 +93,83 @@
       return node ? [...(this.postOrderOfNode(node.left)), ...(this.postOrderOfNode(node.right)), node.val,] : []
     }
 
+    private fixTree(node: Node){
+      console.log(node)
+      // 如果是根节点，染黑返回
+      if (!node || !node.parent) {
+        if (node) node.color = "black";
+        return;
+      }
+
+      const parent = node.parent;
+      const grandFather = parent.parent;
+
+      // 如果没有祖父节点，说明 parent 是根
+      if (!grandFather) {
+        parent.color = "black";
+        return;
+      }
+
+      // 如果父节点是黑色，不需要修复
+      if (parent.color === "black") return;
+
+      // 确定叔叔节点
+      const uncle = parent === grandFather.left ? grandFather.right : grandFather.left;
+      if(!uncle || uncle.color === "black"){
+        // 1. LL 在该情况下直接给祖父节点右旋就行，因为祖父节点一定大于父节点
+        if(parent.left === node && grandFather.left === parent) {
+          console.log("LL")
+          parent.color = "black"
+          grandFather.color = "red"
+          this.rotateRight(grandFather)
+          return;
+        }
+
+        // 2. RR 在该情况下直接给祖父节点左旋就行，因为祖父节点一定大于父节点
+        if(parent.right === node && grandFather.right === parent){
+          console.log("RR")
+          parent.color = "black"
+          grandFather.color = "red"
+          this.rotateLeft(grandFather)
+          return;
+        }
+
+        // 3. LR 在该情况下，应当先将父节点左旋，弄成LL的情况
+        if(grandFather.left === parent && parent.right === node){
+          console.log("LR")
+          parent.color = "black"
+          grandFather.color = "red"
+          this.rotateLeft(parent)
+          this.rotateRight(grandFather)
+          return;
+        }
+
+        // 4. RL 在该情况下，应当先将父节点右旋，弄成RR的情况
+          console.log("RL")
+        if(grandFather.right === parent && parent.left === node){
+          parent.color = "black"
+          grandFather.color = "red"
+          this.rotateRight(parent)
+          this.rotateLeft(grandFather)
+          return;
+        }
+      }
+
+      if(uncle?.color === 'red'){
+        console.log("uncle is red")
+        parent.color = "black"
+        uncle.color = "black"
+        grandFather.color = "red"
+        this.fixTree(grandFather)
+      }
+
+    }
+
     insertValue(val: number) {
       let {target:current, parentOfTarget: parent} = this.getNode(val)
 
       if(!parent && !current){
-        this.root = new Node(val, null, null)
+        this.root = new Node(val, null,null, null, "black")
         return
       }
 
@@ -105,14 +178,20 @@
         return;
       }
 
-      if(!current) current = new Node(val, null, null)
+      if(!current) current = new Node(val, parent,null, null, "red")
 
       if(parent){
-        if(parent.val > val) parent.left = current
-        else parent.right = current
+        if(parent.val > val) {
+          parent.left = current
+          current.parent = parent
+        }
+        else {
+          parent.right = current
+          current.parent = parent
+        }
       }
-
       this.size++
+      this.fixTree(current)
     }
     deleteValue(val: number) {
       let {target:current, parentOfTarget: parent, from} = this.getNode(val)
@@ -184,6 +263,59 @@
       }
       this.size --
     }
+    // 左旋节点
+    rotateLeft(node: Node){
+      if(!node.right) return
+
+      // 1.root的右子节点变成了它的父节点
+      let newRoot = node.right
+      let parent = node.parent
+
+      // 2.root的父节点不再连接着其父节点，转而连接着root的右子节点（newRoot）
+      if(parent){
+        newRoot.parent = parent
+        if(parent.left === node) parent.left = newRoot
+        else parent.right = newRoot
+      }
+      else{
+        this.root = newRoot
+        this.root.parent = null
+      }
+
+      // 3.newRoot的左子节点变成了root的右子节点，因为newRoot的左子节点一定比root大
+      node.right = newRoot.left
+      if(newRoot.left) newRoot.left.parent = node
+
+      // 4.newRoot的左子节点变成了root，因为newRoot一定比root大
+      newRoot.left = node
+      node.parent = newRoot
+
+    }
+    // 右旋节点
+    rotateRight(node: Node){
+      if(!node.left) return
+      // 1.root的左子节点变成了它的父节点
+      let newRoot = node.left
+
+      if(node.parent){
+        newRoot.parent = node.parent
+        if(node.parent.left === node) node.parent.left = newRoot
+        else node.parent.right = newRoot
+      }
+      else{
+        this.root = newRoot
+        this.root.parent = null
+      }
+
+      node.left = newRoot.right
+      if(newRoot.right) newRoot.right.parent = node
+
+      // 4.newRoot的左子节点变成了root，因为newRoot一定比root大
+      newRoot.right = node
+      node.parent = newRoot
+    }
+
+
     search(val: number) {
       return (this.getNode(val)).target
 
@@ -203,14 +335,16 @@
 
   }
   export class Node{
-    constructor(val: number, left: Node | null, right: Node | null, color: string | "red" | "black" | null = null) {
+    constructor(val: number, parent: Node | null, left: Node | null, right: Node | null, color: string | "red" | "black" | null = null) {
       this.val = val
+      this.parent = parent
       this.left = left
       this.right = right
       this.count = 1
       this.color = color ?? "red"
     }
     val:number;
+    parent: Node | null;
     left:Node | null;
     right:Node | null;
     count: number;
@@ -223,18 +357,21 @@
     components: {RBTDrawer},
     data(){
       return{
-        tree: new RBT(),
-        currentValue: null as number | null
+        tree: markRaw(new RBT()),
+        currentValue: null as number | null,
+        treeVersion: 0
       }
     },
     methods:{
       insert(){
         if(null === this.currentValue || undefined === this.currentValue) return
         this.tree.insertValue(this.currentValue)
+        this.treeVersion++
       },
       remove() {
         if(null === this.currentValue || undefined === this.currentValue) return
         this.tree.deleteValue(this.currentValue)
+        this.treeVersion++
       },
       search() {
         if(null === this.currentValue || undefined === this.currentValue) return
