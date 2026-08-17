@@ -1,29 +1,29 @@
 <script lang="ts">
-import {type Component, defineComponent, markRaw} from 'vue'
+import {defineComponent, markRaw, type PropType} from 'vue'
+import SortTemplate, {type SortAlgorithm} from "./SortTemplate.vue";
 
-export interface SortAlgorithmComponent {
-  id: string;
-  component: Component;
-}
+
 
 export default defineComponent({
   name: "RNG",
+  components: {SortTemplate},
   emits: ['commit'],
   props:{
-    components : {
-      type: Array<SortAlgorithmComponent>,
+    algorithms : {
+      type: Object as PropType<Array<SortAlgorithm>>,
       default: () => []
     }
   },
   data(){
     return {
-      min: 0,
-      max:100,
-      count:100,
+      min: 0 as number,
+      max:100 as number,
+      count:100 as number,
       list:markRaw([] as number[]),
       status:{
         generating: false
-      }
+      },
+      version: 0 as number
     }
   },
   methods:{
@@ -61,7 +61,7 @@ export default defineComponent({
 
     },
     commit(){
-      this.$emit('commit', this.list)
+      this.version ++;
     }
   }
 })
@@ -69,6 +69,7 @@ export default defineComponent({
 
 <template>
   <section class="RNG">
+    <h1>排序算法专题</h1>
     <header>
       <div class="input-item">
         <label for="min">最小值</label>
@@ -88,7 +89,9 @@ export default defineComponent({
       </aside>
     </header>
     <main>
-      <Component v-for="item in components" :is="item.component" :key="item.id" />
+      <template v-for="item in algorithms" :key="item.id">
+        <SortTemplate :algorithm="item" :numbers="list" :version="version"/>
+      </template>
     </main>
   </section>
 </template>
@@ -96,7 +99,7 @@ export default defineComponent({
 <style scoped>
 section.RNG{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     header{
         display: flex;
         flex-direction: row;
@@ -117,7 +120,7 @@ section.RNG{
     }
     main{
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(4,1fr);
     }
 }
 </style>
