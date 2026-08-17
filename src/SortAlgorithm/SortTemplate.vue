@@ -34,21 +34,22 @@ export default defineComponent({
     version() {
       nextTick(() => {
         this.beginTime = performance.now()
-        this.algorithm.sort(this.numbers)
+        const copy = [...this.numbers]
+        this.algorithm.sort(copy)
         this.endTime = performance.now()
         nextTick(()=>{
-          this.testNumbers()
+          this.testNumbers(copy)
         })
       })
     }
   },
   methods:{
-    testNumbers(){
+    testNumbers(numbers: Array<number>){
       let last = null
-      for (const n of this.numbers) {
+      for (const n of numbers) {
         if(null === last) last = n
         if(last > n) {
-          console.log("数组未完成排序！", this.numbers)
+          console.log("数组未完成排序！", numbers)
           console.log("错误值：", last, n)
           this.isOrdered = false
           return
@@ -70,7 +71,7 @@ export default defineComponent({
       <span>结束时间: {{ endTime }}</span>
       <span>排序用时: {{ (endTime - beginTime).toFixed(6) }} ms</span>
       <div class="result">
-        <span>数组是否有序: </span>
+        <span>数组有序: </span>
         <span :class="{ok: isOrdered, err:!isOrdered}">{{isOrdered}}</span>
       </div>
     </main>

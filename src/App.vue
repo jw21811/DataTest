@@ -2,13 +2,23 @@
 
 import BST from "./DataStructure/BST/index.vue";
 import RNG from "./SortAlgorithm/RNG.vue";
-import {mergeSort, mergeSortWithSlice} from "./SortAlgorithm/Algorithm.ts";
+import {bubbleSort,insertSort, mergeSort, selectSort} from "./SortAlgorithm/Algorithm.ts";
 
 const algorithms = [
   {
-    id:'MS',
-    name:'归并排序(slice)',
-    sort: mergeSortWithSlice
+    id:'BS',
+    name:'冒泡排序',
+    sort:bubbleSort
+  },
+  {
+   id:"SS",
+   name:"选择排序",
+   sort:selectSort
+  },
+  {
+    id:"IS",
+    name:"插入排序",
+    sort:insertSort
   },
   {
     id:'MS',
