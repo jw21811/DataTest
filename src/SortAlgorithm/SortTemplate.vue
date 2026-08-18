@@ -47,6 +47,8 @@ export default defineComponent({
   },
   methods:{
     testNumbers(numbers: Array<number>){
+      if(!numbers || !Array.isArray(numbers)) return;
+
       let last = null
       for (const n of numbers) {
         if(null === last) last = n
