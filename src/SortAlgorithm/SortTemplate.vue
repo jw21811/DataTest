@@ -23,36 +23,36 @@ export default defineComponent({
     }
   },
   name: "SortTemplate",
-  data() {
+  data () {
     return {
       beginTime: 0 as number,
       endTime: 0 as number,
-      isOrdered:false,
+      isOrdered: false,
       isEnabled: true
     }
   },
   watch: {
-    version() {
-      if(!this.isEnabled) return
+    version () {
+      if (!this.isEnabled) return
       nextTick(() => {
         const copy = [...this.numbers]
         this.beginTime = performance.now()
-        const res =  this.algorithm.sort(copy)
+        const res = this.algorithm.sort(copy)
         this.endTime = performance.now()
-        nextTick(()=>{
+        nextTick(() => {
           this.testNumbers(res)
         })
       })
     }
   },
-  methods:{
-    testNumbers(numbers: Array<number>){
-      if(!numbers || !Array.isArray(numbers)) return;
+  methods: {
+    testNumbers (numbers: Array<number>) {
+      if (!numbers || !Array.isArray(numbers)) return;
 
       let last = null
       for (const n of numbers) {
-        if(null === last) last = n
-        if(last > n) {
+        if (null === last) last = n
+        if (last > n) {
           console.log("数组未完成排序！", numbers)
           console.log("错误值：", last, n)
           this.isOrdered = false
@@ -71,16 +71,16 @@ export default defineComponent({
       <h3>{{ algorithm.name }}</h3>
     </header>
     <main :class="{disabled: !isEnabled}">
-      <div>
-        <label>启用排序</label>
+      <label class="enable-toggle">
+        <span>启用排序</span>
         <input type="checkbox" v-model="isEnabled"/>
-      </div>
+      </label>
       <span>开始时间: {{ beginTime }}</span>
       <span>结束时间: {{ endTime }}</span>
       <span>排序用时: {{ (endTime - beginTime).toFixed(6) }} ms</span>
       <div class="result">
         <span>数组有序: </span>
-        <span :class="{ok: isOrdered, err:!isOrdered}">{{isOrdered}}</span>
+        <span :class="{ok: isOrdered, err:!isOrdered}">{{ isOrdered }}</span>
       </div>
     </main>
   </section>
@@ -88,27 +88,45 @@ export default defineComponent({
 
 <style scoped>
 section.SortTemplate {
-  display: flex;
-  flex-direction: column;
-
-  main {
     display: flex;
     flex-direction: column;
-    &.disabled{
-      opacity: 0.5;
-    }
-    .result{
-      display: flex;
-      flex-direction: row;
-      span{
-        &.ok{
-          color: green;
+
+    main {
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+
+        .enable-toggle {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+
+            input {
+                cursor: pointer;
+            }
         }
-        &.err{
-          color: red;
+
+        &.disabled {
+            opacity: 0.5;
         }
-      }
+
+        .result {
+            display: flex;
+            flex-direction: row;
+
+            span {
+                &.ok {
+                    color: green;
+                }
+
+                &.err {
+                    color: red;
+                }
+            }
+        }
     }
-  }
 }
 </style>
