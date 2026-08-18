@@ -27,11 +27,13 @@ export default defineComponent({
     return {
       beginTime: 0 as number,
       endTime: 0 as number,
-      isOrdered:false
+      isOrdered:false,
+      isEnabled: true
     }
   },
   watch: {
     version() {
+      if(!this.isEnabled) return
       nextTick(() => {
         const copy = [...this.numbers]
         this.beginTime = performance.now()
@@ -66,7 +68,11 @@ export default defineComponent({
     <header>
       <h3>{{ algorithm.name }}</h3>
     </header>
-    <main>
+    <main :class="{disabled: !isEnabled}">
+      <div>
+        <label>启用排序</label>
+        <input type="checkbox" v-model="isEnabled"/>
+      </div>
       <span>开始时间: {{ beginTime }}</span>
       <span>结束时间: {{ endTime }}</span>
       <span>排序用时: {{ (endTime - beginTime).toFixed(6) }} ms</span>
@@ -86,6 +92,9 @@ section.SortTemplate {
   main {
     display: flex;
     flex-direction: column;
+    &.disabled{
+      opacity: 0.5;
+    }
     .result{
       display: flex;
       flex-direction: row;
