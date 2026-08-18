@@ -2,7 +2,7 @@
 
 import BST from "./DataStructure/BST/index.vue";
 import RNG from "./SortAlgorithm/RNG.vue";
-import {bubbleSort,insertSort, mergeSort, selectSort} from "./SortAlgorithm/Algorithm.ts";
+import {bubbleSort, insertSort, mergeSort, selectSort} from "./SortAlgorithm/Algorithms";
 
 const algorithms = [
   {

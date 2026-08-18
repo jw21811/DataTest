@@ -33,8 +33,8 @@ export default defineComponent({
   watch: {
     version() {
       nextTick(() => {
-        this.beginTime = performance.now()
         const copy = [...this.numbers]
+        this.beginTime = performance.now()
         const res =  this.algorithm.sort(copy)
         this.endTime = performance.now()
         nextTick(()=>{
