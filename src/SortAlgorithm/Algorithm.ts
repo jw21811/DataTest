@@ -14,21 +14,7 @@
  * @returns 排序后的原数组引用
  */
 export function bubbleSort(numbers: Array<number>): Array<number> {
-    for (let i = 0; i < numbers.length - 1; i++) {
-        let swapped = false
-        for (let j = 0; j < numbers.length - 1 - i; j++) {
-            if (numbers[j] > numbers[j + 1]) {
-                const cache = numbers[j]
-                numbers[j] = numbers[j + 1]
-                numbers[j + 1] = cache
-                swapped = true
-            }
-        }
-        if (!swapped) {
-            break
-        }
-    }
-    return numbers
+    throw new Error('bubbleSort 尚未实现')
 }
 
 /**
@@ -47,16 +33,7 @@ export function bubbleSort(numbers: Array<number>): Array<number> {
  * @returns 排序后的原数组引用
  */
 export function selectSort(numbers: Array<number>): Array<number> {
-    for (let i = 0; i < numbers.length; i++) {
-        let smallestIndex = i
-        for (let j = i + 1; j < numbers.length; j++) {
-            if (numbers[j] < numbers[smallestIndex]) smallestIndex = j
-        }
-        const cache = numbers[i]
-        numbers[i] = numbers[smallestIndex]
-        numbers[smallestIndex] = cache
-    }
-    return numbers
+    throw new Error('selectSort 尚未实现')
 }
 
 /**
@@ -76,16 +53,7 @@ export function selectSort(numbers: Array<number>): Array<number> {
  * @returns 排序后的原数组引用
  */
 export function insertSort(numbers: Array<number>): Array<number> {
-    for (let i = 1; i < numbers.length; i++) {
-        const current = numbers[i]
-        let j = i - 1
-        while (j >= 0 && numbers[j] > current) {
-            numbers[j + 1] = numbers[j]
-            j--
-        }
-        numbers[j + 1] = current
-    }
-    return numbers
+    throw new Error('insertSort 尚未实现')
 }
 
 /**
@@ -108,26 +76,7 @@ export function insertSort(numbers: Array<number>): Array<number> {
  * @returns 排序后的数组
  */
 export function mergeSortWithSlice(numbers: Array<number>): Array<number> {
-    if (numbers.length < 2) return numbers
-    const index = Math.floor((numbers.length / 2))
-    const left = mergeSortWithSlice(numbers.slice(0, index))
-    const right = mergeSortWithSlice(numbers.slice(index, numbers.length))
-
-    let i = 0
-    let j = 0
-    const leftLength = left.length
-    const rightLength = right.length
-    const res = [] as Array<number>
-
-    while (i < leftLength && j < rightLength) {
-        if (left[i] < right[j]) res.push(left[i++])
-        else res.push(right[j++])
-    }
-
-    while (i < leftLength) res.push(left[i++])
-    while (j < rightLength) res.push(right[j++])
-
-    return res
+    throw new Error('mergeSortWithSlice 尚未实现')
 }
 
 /**
@@ -149,54 +98,7 @@ export function mergeSortWithSlice(numbers: Array<number>): Array<number> {
  * @returns 排序后的原数组引用
  */
 export function mergeSort(numbers: Array<number>): Array<number> {
-    if (numbers.length < 2) {
-        return numbers
-    }
-
-    const temp = new Array<number>(numbers.length)
-
-    function sort(left: number, right: number) {
-        if (right - left < 2) {
-            return
-        }
-
-        const mid = Math.floor((left + right) / 2)
-
-        sort(left, mid)
-        sort(mid, right)
-
-        merge(left, mid, right)
-    }
-
-    function merge(left: number, mid: number, right: number) {
-        let i = left
-        let j = mid
-        let k = left
-
-        while (i < mid && j < right) {
-            if (numbers[i] <= numbers[j]) {
-                temp[k++] = numbers[i++]
-            } else {
-                temp[k++] = numbers[j++]
-            }
-        }
-
-        while (i < mid) {
-            temp[k++] = numbers[i++]
-        }
-
-        while (j < right) {
-            temp[k++] = numbers[j++]
-        }
-
-        for (let index = left; index < right; index++) {
-            numbers[index] = temp[index]
-        }
-    }
-
-    sort(0, numbers.length)
-
-    return numbers
+    throw new Error('mergeSort 尚未实现')
 }
 
 /**
@@ -216,11 +118,11 @@ export function mergeSort(numbers: Array<number>): Array<number> {
  * 基准值的选择会显著影响性能。随机选择、三数取中等策略可以降低连续出现极端分区的概率。
  * 当前方法仅提供接口骨架，尚未实现基准值选择、分区与递归排序逻辑。
  *
- * @param _numbers - 需要排序的数字数组
+ * @param numbers - 需要排序的数字数组
  * @returns 实现完成后，返回排序后的原数组引用
  * @throws 当前方法尚未实现，调用时始终抛出异常
  */
-export function quickSort(_numbers: Array<number>): Array<number> {
+export function quickSort(numbers: Array<number>): Array<number> {
     throw new Error('quickSort 尚未实现')
 }
 
@@ -240,11 +142,11 @@ export function quickSort(_numbers: Array<number>): Array<number> {
  * 间隔序列会显著影响实际性能，常见序列包括 Shell、Knuth、Sedgewick 和 Ciura 序列。
  * 当前方法仅提供接口骨架，尚未实现间隔缩减和分组插入排序逻辑。
  *
- * @param _numbers - 需要排序的数字数组
+ * @param numbers - 需要排序的数字数组
  * @returns 实现完成后，返回排序后的原数组引用
  * @throws 当前方法尚未实现，调用时始终抛出异常
  */
-export function shellSort(_numbers: Array<number>): Array<number> {
+export function shellSort(numbers: Array<number>): Array<number> {
     throw new Error('shellSort 尚未实现')
 }
 
@@ -265,11 +167,11 @@ export function shellSort(_numbers: Array<number>): Array<number> {
  * 实际运行中的缓存局部性通常弱于快速排序。
  * 当前方法仅提供接口骨架，尚未实现建堆、下沉和元素交换逻辑。
  *
- * @param _numbers - 需要排序的数字数组
+ * @param numbers - 需要排序的数字数组
  * @returns 实现完成后，返回排序后的原数组引用
  * @throws 当前方法尚未实现，调用时始终抛出异常
  */
-export function heapSort(_numbers: Array<number>): Array<number> {
+export function heapSort(numbers: Array<number>): Array<number> {
     throw new Error('heapSort 尚未实现')
 }
 
@@ -291,11 +193,11 @@ export function heapSort(_numbers: Array<number>): Array<number> {
  * 计数排序属于非比较排序。当数值范围非常大但数据量较小时，计数数组会造成明显的空间浪费。
  * 当前方法仅提供接口骨架，尚未实现范围计算、计数和结果回写逻辑。
  *
- * @param _numbers - 需要排序的整数数组
+ * @param numbers - 需要排序的整数数组
  * @returns 实现完成后，返回排序后的数组
  * @throws 当前方法尚未实现，调用时始终抛出异常
  */
-export function countingSort(_numbers: Array<number>): Array<number> {
+export function countingSort(numbers: Array<number>): Array<number> {
     throw new Error('countingSort 尚未实现')
 }
 
@@ -318,12 +220,12 @@ export function countingSort(_numbers: Array<number>): Array<number> {
  * 桶过少会增加桶内排序成本，桶过多会增加额外空间与管理成本。
  * 当前方法仅提供接口骨架，尚未实现数值映射、桶内排序和结果合并逻辑。
  *
- * @param _numbers - 需要排序的数字数组
+ * @param numbers - 需要排序的数字数组
  * @param _bucketSize - 每个桶覆盖的数值区间大小，必须大于 0
  * @returns 实现完成后，返回排序后的数组
  * @throws 当前方法尚未实现，调用时始终抛出异常
  */
-export function bucketSort(_numbers: Array<number>, _bucketSize = 5): Array<number> {
+export function bucketSort(numbers: Array<number>, _bucketSize = 5): Array<number> {
     throw new Error('bucketSort 尚未实现')
 }
 
@@ -345,11 +247,11 @@ export function bucketSort(_numbers: Array<number>, _bucketSize = 5): Array<numb
  * 常见实现使用十进制基数 10。负数通常需要与非负数分开处理，再按规则合并结果。
  * 当前方法仅提供接口骨架，尚未实现数位提取、稳定分配和负数处理逻辑。
  *
- * @param _numbers - 需要排序的整数数组
+ * @param numbers - 需要排序的整数数组
  * @param _radix - 使用的进制基数，必须是大于 1 的整数
  * @returns 实现完成后，返回排序后的数组
  * @throws 当前方法尚未实现，调用时始终抛出异常
  */
-export function radixSort(_numbers: Array<number>, _radix = 10): Array<number> {
+export function radixSort(numbers: Array<number>, _radix = 10): Array<number> {
     throw new Error('radixSort 尚未实现')
 }
