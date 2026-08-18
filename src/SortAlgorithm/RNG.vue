@@ -89,7 +89,7 @@ export default defineComponent({
       </aside>
     </header>
     <main>
-      <template v-for="item in algorithms" :key="item.id">
+      <template v-for="item in algorithms" :key="item.id ?? item.name">
         <SortTemplate :algorithm="item" :numbers="list" :version="version"/>
       </template>
     </main>
