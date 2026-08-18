@@ -35,10 +35,10 @@ export default defineComponent({
       nextTick(() => {
         this.beginTime = performance.now()
         const copy = [...this.numbers]
-        this.algorithm.sort(copy)
+        const res =  this.algorithm.sort(copy)
         this.endTime = performance.now()
         nextTick(()=>{
-          this.testNumbers(copy)
+          this.testNumbers(res)
         })
       })
     }
